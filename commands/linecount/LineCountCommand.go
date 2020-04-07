@@ -1,0 +1,56 @@
+package linecount
+
+import (
+	"bufio"
+	"errors"
+	"flag"
+	"fmt"
+	"fops/commands"
+	"fops/service"
+	"os"
+	"rsc.io/getopt"
+	"strings"
+)
+type command struct {
+	commands.SubCommand
+}
+var path string
+func (c *command) Initial () {
+	c.Flag.StringVar(&path, "file", "", " the input file")
+	c.Flag.Alias("f", "file")
+}
+func (c *command) Handle (args []string) error {
+	if len(path) > 0 {
+		file, fileInfo, fileErr := service.GetFile(path)
+		if fileErr != nil {
+			fmt.Println(fileErr)
+		}
+		if strings.Index(fileInfo.Mode().String(), "x") != -1 {
+			fmt.Printf("error: Cannot do linecount for binary file'%s'", fileInfo.Mode().String())
+		}
+		fmt.Println(getFileLineCount(file))
+	}else{
+		return errors.New("Missing Argument")
+	}
+	return nil
+}
+func GetCommand() commands.CommandInterface {
+	linecount := getopt.NewFlagSet("linecount", flag.ExitOnError)
+	return &command{
+		commands.SubCommand{
+			Flag: linecount,
+			CommandName: "linecount",
+			Description: "Print line count of file",
+		},
+	}
+}
+
+func getFileLineCount(file *os.File) int {
+	scanner := bufio.NewScanner(file)
+	var result []string
+	for scanner.Scan() {
+		line := scanner.Text()
+		result = append(result, line)
+	}
+	return len(result)
+}
