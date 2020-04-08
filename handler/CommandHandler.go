@@ -13,7 +13,9 @@ type CommandHandler struct {
 }
 
 var commandHandler *CommandHandler
-
+var getRootCommand = func(args []string) error {
+	return root.GetRootCommand().Do(args)
+}
 func InitialCommandHandler() error {
 	commandHandler = &CommandHandler{}
 	return nil
@@ -65,7 +67,7 @@ func (s *CommandHandler) Do (args []string) error {
 		}
 	}
 	if ! handle {
-		if rootCommandHandleErr := root.GetRootCommand().Do(args); rootCommandHandleErr != nil {
+		if rootCommandHandleErr := getRootCommand(args); rootCommandHandleErr != nil {
 			//log.Println("Failed to parse root command: ", rootCommandHandleErr)
 			templates.RootCommandUsage(cmdTemplae)
 			root.GetRootCommand().Flags.PrintDefaults()
