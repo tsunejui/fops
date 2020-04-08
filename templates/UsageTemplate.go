@@ -13,14 +13,14 @@ type CommandTemplate struct {
 
 func RootCommandUsage(subcommand []CommandTemplate) {
 	tmpl, tmplErr := template.New("rootcommand").Parse(
-`Usage:
+`File Ops
+Usage:
   fops [flags] 
   fops [command] 
 Available Commands:
   {{range .Commands}}{{.Name}} {{.Description}}
   {{end}}
-Flags:
-`)
+Flags:`)
 	if tmplErr != nil {
 		log.Println("Failed to new template: ", tmplErr)
 	}
@@ -56,8 +56,7 @@ func SubCommandUsage(description string, commandName string) {
 		`{{.Description}}
 Usage:
   fops {{.Name}} [flags] 
-Flags:
-`)
+Flags:`)
 	if tmplErr != nil {
 		log.Println("Failed to new template: ", tmplErr)
 	}

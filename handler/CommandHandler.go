@@ -32,10 +32,15 @@ func (s *CommandHandler) AddCommand(command commands.CommandInterface) *CommandH
 	return s
 }
 
+func (s *CommandHandler) GetCommands() []commands.CommandInterface {
+	return s.Commands
+}
+
 func (s *CommandHandler) Do (args []string) error {
 	var handle bool = false
+	var cmdTemplae []templates.CommandTemplate
 	if len(args) > 1 {
-		for _, command := range s.Commands {
+		for _, command := range s.GetCommands() {
 			if args[1] == command.GetCommandName() {
 				command.Initial()
 				if parseErr := command.Parse(args[2:]); parseErr != nil {
@@ -49,18 +54,15 @@ func (s *CommandHandler) Do (args []string) error {
 				handle = true
 				break
 			}
+			cmdTemplae = append(cmdTemplae, templates.CommandTemplate{
+				Name:        command.GetCommandName(),
+				Description: command.GetDescription(),
+			})
 		}
 	}
 	if ! handle {
 		if rootCommandHandleErr := root.GetRootCommand().Do(args); rootCommandHandleErr != nil {
 			//log.Println("Failed to parse root command: ", rootCommandHandleErr)
-			var cmdTemplae []templates.CommandTemplate
-			for _, command := range s.Commands {
-				cmdTemplae = append(cmdTemplae, templates.CommandTemplate{
-					Name:        command.GetCommandName(),
-					Description: command.GetDescription(),
-				})
-			}
 			templates.RootCommandUsage(cmdTemplae)
 			root.GetRootCommand().Flags.PrintDefaults()
 		}

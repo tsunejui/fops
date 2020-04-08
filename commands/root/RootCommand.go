@@ -29,5 +29,6 @@ func (r RootCommand) Do(args []string) error {
 	if help {
 		return errors.New("Show command help")
 	}
-	return nil
+	return errors.New("nothing to do")
+	//return nil
 }

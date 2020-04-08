@@ -2,7 +2,6 @@ package help
 
 import (
 	"flag"
-	"fmt"
 	"fops/commands"
 	"fops/handler"
 	"fops/templates"
@@ -17,9 +16,8 @@ func (c *command) Initial () {
 }
 func (c *command) Handle (args []string) error {
 	if len(args) > 2 {
-		for _, command := range handler.GetCommandHandler().Commands {
+		for _, command := range handler.GetCommandHandler().GetCommands() {
 			if args[2] == command.GetCommandName() {
-				fmt.Println(command.GetDescription())
 				command.Initial()
 				templates.SubCommandUsage(command.GetDescription(), command.GetCommandName())
 				command.GetField().PrintDefaults()
