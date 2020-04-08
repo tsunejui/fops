@@ -5,20 +5,24 @@ import (
 	"fops/commands"
 	"fops/handler"
 	"fops/templates"
+	"log"
 	"rsc.io/getopt"
 )
 
 type command struct {
 	commands.SubCommand
 }
-func (c *command) Initial () {
-
+func (c *command) Initial () error {
+	return nil
 }
 func (c *command) Handle (args []string) error {
 	if len(args) > 2 {
 		for _, command := range handler.GetCommandHandler().GetCommands() {
 			if args[2] == command.GetCommandName() {
-				command.Initial()
+				if initialErr := command.Initial(); initialErr != nil {
+					log.Println("Failed to intiial command: ", initialErr)
+					break
+				}
 				templates.SubCommandUsage(command.GetDescription(), command.GetCommandName())
 				command.GetField().PrintDefaults()
 				break

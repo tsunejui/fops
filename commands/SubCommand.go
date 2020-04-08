@@ -9,7 +9,7 @@ type CommandInterface interface {
 	GetDescription() string
 	GetCommandName() string
 	Parse([]string) error
-	Initial()
+	Initial() error
 	Handle([]string) error
 }
 

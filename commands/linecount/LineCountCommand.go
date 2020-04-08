@@ -15,9 +15,10 @@ type command struct {
 	commands.SubCommand
 }
 var path string
-func (c *command) Initial () {
-	c.Flag.StringVar(&path, "file", "", " the input file")
-	c.Flag.Alias("f", "file")
+func (c *command) Initial () error {
+	c.GetField().StringVar(&path, "file", "", " the input file")
+	c.GetField().Alias("f", "file")
+	return nil
 }
 func (c *command) Handle (args []string) error {
 	if len(path) > 0 {

@@ -11,8 +11,8 @@ type command struct {
 	commands.SubCommand
 }
 
-func (c *command) Initial () {
-
+func (c *command) Initial () error {
+	return nil
 }
 
 func (c *command) Handle (args []string) error {

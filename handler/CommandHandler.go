@@ -4,6 +4,7 @@ import (
 	"fops/commands"
 	"fops/commands/root"
 	"fops/templates"
+	"log"
 )
 
 type CommandHandler struct {
@@ -42,7 +43,10 @@ func (s *CommandHandler) Do (args []string) error {
 	if len(args) > 1 {
 		for _, command := range s.GetCommands() {
 			if args[1] == command.GetCommandName() {
-				command.Initial()
+				if initialErr := command.Initial(); initialErr != nil {
+					log.Println("Failed to initial command: ", initialErr)
+					continue
+				}
 				if parseErr := command.Parse(args[2:]); parseErr != nil {
 					continue
 				}
