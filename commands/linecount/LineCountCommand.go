@@ -8,8 +8,8 @@ import (
 	"fops/commands"
 	"fops/service"
 	"os"
+	"path/filepath"
 	"rsc.io/getopt"
-	"strings"
 )
 type command struct {
 	commands.SubCommand
@@ -21,13 +21,18 @@ func (c *command) Initial () {
 }
 func (c *command) Handle (args []string) error {
 	if len(path) > 0 {
-		file, fileInfo, fileErr := service.GetFile(path)
+		file, _, fileErr := service.GetFile(path)
 		if fileErr != nil {
 			fmt.Println(fileErr)
+			return nil
 		}
-		if strings.Index(fileInfo.Mode().String(), "x") != -1 {
-			fmt.Printf("error: Cannot do linecount for binary file'%s'", fileInfo.Mode().String())
+
+		//edge case
+		if filepath.Base(path) == filepath.Base(os.Args[0]) {
+			fmt.Printf("error: Cannot do linecount for binary file'%s'", filepath.Base(path))
+			return nil
 		}
+
 		fmt.Println(getFileLineCount(file))
 	}else{
 		return errors.New("Missing Argument")
