@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"fops/commands"
 	"fops/service"
+	"io"
 	"os"
 	"path/filepath"
 	"rsc.io/getopt"
@@ -51,7 +52,7 @@ func GetCommand() commands.CommandInterface {
 	}
 }
 
-func getFileLineCount(file *os.File) int {
+var getFileLineCount = func (file io.Reader) int {
 	scanner := bufio.NewScanner(file)
 	var result []string
 	for scanner.Scan() {

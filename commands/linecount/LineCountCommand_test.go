@@ -1,6 +1,7 @@
 package linecount
 
 import (
+	"bytes"
 	"flag"
 	"fops/commands"
 	"github.com/prashantv/gostub"
@@ -26,9 +27,9 @@ func TestInitial(t *testing.T) {
 }
 
 func TestHandleHasPath(t *testing.T) {
-	mockFile, mockFileErr := os.Create("test")
 	var info os.FileInfo
-	defer gostub.StubFunc(&getFile, mockFile, info, nil).Reset()
+	defer gostub.StubFunc(&getFile, &os.File{}, info, nil).Reset()
+	defer gostub.StubFunc(&getFileLineCount, 0).Reset()
 	assert.NoError(t, (&command{
 		SubCommand: commands.SubCommand{
 			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
@@ -37,13 +38,11 @@ func TestHandleHasPath(t *testing.T) {
 		},
 		path: "test",
 	}).Handle([]string{"test"}))
-	assert.NoError(t, mockFileErr)
 }
 
 func TestHandleHasNotPath(t *testing.T) {
-	mockFile, mockFileErr := os.Create("test")
 	var info os.FileInfo
-	defer gostub.StubFunc(&getFile, mockFile, info, nil).Reset()
+	defer gostub.StubFunc(&getFile, &os.File{}, info, nil).Reset()
 	assert.Error(t, (&command{
 		SubCommand: commands.SubCommand{
 			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
@@ -51,5 +50,8 @@ func TestHandleHasNotPath(t *testing.T) {
 			CommandName: "",
 		},
 	}).Handle([]string{"test"}))
-	assert.NoError(t, mockFileErr)
+}
+
+func TestGetFileLineCount(t *testing.T) {
+	assert.Equal(t, "int", reflect.TypeOf(getFileLineCount(bytes.NewBufferString("foo\nbar"))).String())
 }
