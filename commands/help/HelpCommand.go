@@ -9,6 +9,8 @@ import (
 	"rsc.io/getopt"
 )
 
+var getAllCommands = handler.GetCommandHandler().GetCommands
+
 type command struct {
 	commands.SubCommand
 }
@@ -17,7 +19,7 @@ func (c *command) Initial () error {
 }
 func (c *command) Handle (args []string) error {
 	if len(args) > 2 {
-		for _, command := range handler.GetCommandHandler().GetCommands() {
+		for _, command := range getAllCommands() {
 			if args[2] == command.GetCommandName() {
 				if initialErr := command.Initial(); initialErr != nil {
 					log.Println("Failed to intiial command: ", initialErr)
