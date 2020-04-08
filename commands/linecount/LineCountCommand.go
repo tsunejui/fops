@@ -11,26 +11,26 @@ import (
 	"path/filepath"
 	"rsc.io/getopt"
 )
+var getFile = service.GetFile
 type command struct {
 	commands.SubCommand
+	path string
 }
-var path string
 func (c *command) Initial () error {
-	c.GetField().StringVar(&path, "file", "", " the input file")
+	c.GetField().StringVar(&c.path, "file", "", " the input file")
 	c.GetField().Alias("f", "file")
 	return nil
 }
 func (c *command) Handle (args []string) error {
-	if len(path) > 0 {
-		file, _, fileErr := service.GetFile(path)
+	if len(c.path) > 0 {
+		file, _, fileErr := getFile(c.path)
 		if fileErr != nil {
 			fmt.Println(fileErr)
 			return nil
 		}
-
 		//edge case
-		if filepath.Base(path) == filepath.Base(os.Args[0]) {
-			fmt.Printf("error: Cannot do linecount for binary file'%s'", filepath.Base(path))
+		if filepath.Base(c.path) == filepath.Base(os.Args[0]) {
+			fmt.Printf("error: Cannot do linecount for binary file'%s'", filepath.Base(c.path))
 			return nil
 		}
 
@@ -43,7 +43,7 @@ func (c *command) Handle (args []string) error {
 func GetCommand() commands.CommandInterface {
 	linecount := getopt.NewFlagSet("linecount", flag.ExitOnError)
 	return &command{
-		commands.SubCommand{
+		SubCommand: commands.SubCommand{
 			Flag: linecount,
 			CommandName: "linecount",
 			Description: "Print line count of file",
