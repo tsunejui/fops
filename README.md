@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/tsunejui/fops.svg?branch=master)](https://travis-ci.com/tsunejui/fops)
+
 # fops
 A command-line application `fops` written in Golang
 
