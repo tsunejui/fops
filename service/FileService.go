@@ -9,7 +9,9 @@ import (
 var (
 	openFile = os.Open
 	fileIsNotExist = os.IsNotExist
-	addSystemPreload = service.AddPreload
+	addSystemPreload = func (load func()) error {
+		return service.AddPreload(load)
+	}
 	getFileStat = func(file *os.File) (os.FileInfo, error) {
 		return file.Stat()
 	}

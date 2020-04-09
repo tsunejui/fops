@@ -9,7 +9,9 @@ import (
 	"rsc.io/getopt"
 )
 
-var getAllCommands = handler.GetCommandHandler().GetCommands
+var getAllCommands = func() []commands.CommandInterface {
+	return handler.GetCommandHandler().GetCommands()
+}
 
 type command struct {
 	commands.SubCommand
