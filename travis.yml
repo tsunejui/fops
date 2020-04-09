@@ -1,0 +1,12 @@
+language: go
+os: linux
+go:
+  - 1.14.x
+env:
+  global:
+    - GO111MODULE=on
+script:
+  - go test ./...
+notifications:
+  email:
+    on_success: never
