@@ -1,23 +1,23 @@
 package root
 
 import (
-	"flag"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"reflect"
-	"rsc.io/getopt"
 	"testing"
 )
 
-func TestGetCommand(t *testing.T) {
-	assert.Equal(t, "*root.RootCommand", reflect.TypeOf(GetRootCommand()).String())
+func TestGetRootCommand(t *testing.T) {
+	cmd, err := GetRootCommand()
+	assert.Equal(t, "*cobra.Command", reflect.TypeOf(cmd).String())
+	assert.NoError(t, err)
 }
 
-func TestInitialRootCommand(t *testing.T) {
-	assert.NoError(t, InitialRootCommand())
-}
-
-func TestDo(t *testing.T) {
-	assert.Error(t, (&RootCommand{
-		Flags: getopt.NewFlagSet("test", flag.ExitOnError),
-	}).Do([]string{"test", "test"}))
+func TestSetRootCommand(t *testing.T) {
+	cmd := &cobra.Command{}
+	setErr := SetRootCommand(cmd)
+	rootCmd, getErr := GetRootCommand()
+	assert.NoError(t, setErr)
+	assert.NoError(t, getErr)
+	assert.Equal(t, rootCmd, cmd)
 }

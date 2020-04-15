@@ -15,6 +15,26 @@ import (
 var usage string = "checksum"
 var shortName string = "Print checksum of file"
 var algorithmList []algorithm.InterfaceAlgorithm
+var getFileArgs = func(cmd *cobra.Command) (string, error){
+	return cmd.Flags().GetString("file")
+}
+var getFlagName = func(cmd *cobra.Command, name string) (bool, error){
+	return cmd.Flags().GetBool(name)
+}
+var getFileData = func (path string) ([]byte, error){
+	_, _, fileErr := service.GetFile(path)
+	if fileErr != nil {
+		return []byte{}, fileErr
+	}
+	data, readErr := ioutil.ReadFile(path)
+	if readErr != nil {
+		return []byte{}, errors.New("Failed to read file: " + readErr.Error())
+	}
+	return data, nil
+}
+var markFlag = func(cmd *cobra.Command, name string) error {
+	return cmd.MarkFlagRequired(name)
+}
 type checksum struct {
 	subcmd.SubCommand
 }
@@ -27,8 +47,9 @@ func GetSubCommand() (*cobra.Command, error){
 		ShortName: shortName,
 	}})
 }
+
 func (c *checksum) SetRequired(cmd *cobra.Command) error {
-	if markErr := cmd.MarkFlagRequired("file"); markErr != nil {
+	if markErr := markFlag(cmd, "file"); markErr != nil {
 		return markErr
 	}
 	return nil
@@ -41,7 +62,7 @@ func (c *checksum) SetFlags(cmd *cobra.Command) error {
 	return nil
 }
 func (c *checksum) RUN (cmd *cobra.Command, args []string) error {
-	filepath, pathErr := cmd.Flags().GetString("file")
+	filepath, pathErr := getFileArgs(cmd)
 	if pathErr != nil {
 		return pathErr
 	}
@@ -54,7 +75,7 @@ func (c *checksum) RUN (cmd *cobra.Command, args []string) error {
 		var parse bool
 		loop:
 			for _, alg := range algorithmList {
-				if ok, _ := cmd.Flags().GetBool(alg.GetName()); ok {
+				if ok, _ := getFlagName(cmd, alg.GetName()); ok {
 					fmt.Println(alg.GetHash(data))
 					parse = true
 					break loop
@@ -75,15 +96,4 @@ func initialAlgorithm() error {
 		sha256.GetAlgorithm(),
 	}
 	return nil
-}
-var getFileData = func (path string) ([]byte, error){
-	_, _, fileErr := service.GetFile(path)
-	if fileErr != nil {
-		return []byte{}, fileErr
-	}
-	data, readErr := ioutil.ReadFile(path)
-	if readErr != nil {
-		return []byte{}, errors.New("Failed to read file: " + readErr.Error())
-	}
-	return data, nil
 }

@@ -1,87 +1,54 @@
 package checksum
 
 import (
-	"flag"
-	"fops/commands"
+	"fops/cmd/subcmd"
 	"github.com/prashantv/gostub"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"reflect"
-	"rsc.io/getopt"
 	"testing"
 )
 
-func TestGetCommand(t *testing.T) {
-	assert.Equal(t, "*checksum.command", reflect.TypeOf(GetCommand()).String())
+func TestGetSubCommand(t *testing.T) {
+	cmd, cmdErr := GetSubCommand()
+	assert.NoError(t, cmdErr)
+	assert.Equal(t, "*cobra.Command", reflect.TypeOf(cmd).String())
 }
 
-func TestInitial(t *testing.T) {
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestChecksumRUN(t *testing.T) {
+	var mockFilePath string = "test"
+	var mockFIle []byte
+	var mockCmd *cobra.Command
+	defer gostub.StubFunc(&getFileArgs, mockFilePath, nil).Reset()
+	defer gostub.StubFunc(&getFileData, mockFIle, nil).Reset()
+	defer gostub.StubFunc(&getFlagName, true, nil).Reset()
+	initErr := initialAlgorithm()
+	assert.NoError(t, (&checksum{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-	}).Initial())
+	}).RUN(mockCmd, []string{}))
+	assert.NoError(t, initErr)
 }
 
-func TestHandleWithMd5(t *testing.T) {
-	defer gostub.StubFunc(&getFileData, []byte{}, nil).Reset()
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestChecksumSetFlags(t *testing.T) {
+	mockCmd := &cobra.Command{}
+	assert.NoError(t, (&checksum{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-		path: "test",
-		md5Algorithm: true,
-	}).Handle([]string{}))
+	}).SetFlags(mockCmd))
 }
 
-func TestHandleWithSha1(t *testing.T) {
-	defer gostub.StubFunc(&getFileData, []byte{}, nil).Reset()
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestChecksumSetRequired(t *testing.T) {
+	defer gostub.StubFunc(&markFlag, nil).Reset()
+	cmd := &cobra.Command{}
+	assert.NoError(t, (&checksum{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-		path: "test",
-		sha1Algorithm: true,
-	}).Handle([]string{}))
-}
-
-func TestHandleWithSha256(t *testing.T) {
-	defer gostub.StubFunc(&getFileData, []byte{}, nil).Reset()
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
-		},
-		path: "test",
-		sha256Algorithm: true,
-	}).Handle([]string{}))
-}
-
-func TestHandleWithNoAlgorithmHasError(t *testing.T) {
-	defer gostub.StubFunc(&getFileData, []byte{}, nil).Reset()
-	assert.Error(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
-		},
-		path: "test",
-	}).Handle([]string{}))
-}
-
-func TestHandleWithNoOathHasError(t *testing.T) {
-	defer gostub.StubFunc(&getFileData, []byte{}, nil).Reset()
-	assert.Error(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
-		},
-	}).Handle([]string{}))
+	}).SetRequired(cmd))
 }
