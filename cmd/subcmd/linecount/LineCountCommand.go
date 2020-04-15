@@ -12,27 +12,33 @@ import (
 var getFile = service.GetFile
 var usage string = "linecount"
 var shortName string = "Print line count of file"
-type checksum struct {
+var getFileArgs = func(cmd *cobra.Command) (string, error){
+	return cmd.Flags().GetString("file")
+}
+var markFlag = func(cmd *cobra.Command, name string) error {
+	return cmd.MarkFlagRequired(name)
+}
+type linecount struct {
 	subcmd.SubCommand
 }
 func GetSubCommand() (*cobra.Command, error){
-	return subcmd.GetCommand(&checksum{subcmd.SubCommand{
+	return subcmd.GetCommand(&linecount{subcmd.SubCommand{
 		Usage:     usage,
 		ShortName: shortName,
 	}})
 }
-func (c *checksum) SetRequired(cmd *cobra.Command) error {
-	if markErr := cmd.MarkFlagRequired("file"); markErr != nil {
+func (c *linecount) SetRequired(cmd *cobra.Command) error {
+	if markErr := markFlag(cmd, "file"); markErr != nil {
 		return markErr
 	}
 	return nil
 }
-func (c *checksum) SetFlags(cmd *cobra.Command) error {
+func (c *linecount) SetFlags(cmd *cobra.Command) error {
 	cmd.Flags().StringP("file", "f", "", "the input file")
 	return nil
 }
-func (c *checksum) RUN (cmd *cobra.Command, args []string) error {
-	filepath, pathErr := cmd.Flags().GetString("file")
+func (c *linecount) RUN (cmd *cobra.Command, args []string) error {
+	filepath, pathErr := getFileArgs(cmd)
 	if pathErr != nil {
 		return pathErr
 	}

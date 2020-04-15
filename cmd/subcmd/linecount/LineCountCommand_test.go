@@ -1,57 +1,49 @@
 package linecount
 
 import (
-	"bytes"
-	"flag"
-	"fops/commands"
+	"fops/cmd/subcmd"
 	"github.com/prashantv/gostub"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
-	"os"
 	"reflect"
-	"rsc.io/getopt"
 	"testing"
 )
 
-func TestGetCommand(t *testing.T) {
-	assert.Equal(t, "*linecount.command", reflect.TypeOf(GetCommand()).String())
+func TestGetSubCommand(t *testing.T) {
+	cmd, cmdErr := GetSubCommand()
+	assert.NoError(t, cmdErr)
+	assert.Equal(t, "*cobra.Command", reflect.TypeOf(cmd).String())
 }
 
-func TestInitial(t *testing.T) {
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
-		},
-	}).Initial())
-}
-
-func TestHandleHasPath(t *testing.T) {
-	var info os.FileInfo
-	defer gostub.StubFunc(&getFile, &os.File{}, info, nil).Reset()
+func TestLineCountRUN(t *testing.T) {
+	var mockFilePath string = "test"
+	var mockCmd *cobra.Command
+	defer gostub.StubFunc(&getFileArgs, mockFilePath, nil).Reset()
+	defer gostub.StubFunc(&getFile, nil, nil, nil).Reset()
 	defer gostub.StubFunc(&getFileLineCount, 0).Reset()
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+	assert.NoError(t, (&linecount{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-		path: "test",
-	}).Handle([]string{"test"}))
+	}).RUN(mockCmd, []string{}))
 }
-
-func TestHandleHasNotPath(t *testing.T) {
-	var info os.FileInfo
-	defer gostub.StubFunc(&getFile, &os.File{}, info, nil).Reset()
-	assert.Error(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestLinecountSetFlags(t *testing.T) {
+	mockCmd := &cobra.Command{}
+	assert.NoError(t, (&linecount{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-	}).Handle([]string{"test"}))
+	}).SetFlags(mockCmd))
 }
-
-func TestGetFileLineCount(t *testing.T) {
-	assert.Equal(t, "int", reflect.TypeOf(getFileLineCount(bytes.NewBufferString("foo\nbar"))).String())
+func TestLineCountSetRequired(t *testing.T) {
+	defer gostub.StubFunc(&markFlag, nil).Reset()
+	cmd := &cobra.Command{}
+	assert.NoError(t, (&linecount{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
+		},
+	}).SetRequired(cmd))
 }
