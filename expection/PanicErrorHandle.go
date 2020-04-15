@@ -17,3 +17,8 @@ func UnexpectedHandle() {
 		log.Println("Unexpecte Error", err)
 	}
 }
+
+func ExitOsError(err error) {
+	log.Println(err)
+	os.Exit(1)
+}
