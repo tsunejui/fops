@@ -15,7 +15,7 @@ A command-line application `fops` written in Golang
 - count line with the specific file
 - generate checksum with the specific file
 
-_**Note:** use `rsc.io/getopt` to implement a option have both a short and a long name. Each option may be a flag or a value. A value takes an argument._
+_**Note:** use `spf13 / cobra` to implement command line utilities._
 
 <a name="installation"/>
 
