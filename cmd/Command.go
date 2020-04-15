@@ -12,6 +12,10 @@ import (
 
 var commandName string = "fops"
 
+var executeCommand = func(cmd *cobra.Command) error {
+	return cmd.Execute()
+}
+
 func init() {
 	if err := root.SetRootCommand(&cobra.Command{Use: commandName}); err != nil {
 		expection.ExitOsError(err)
@@ -35,7 +39,7 @@ func Execute() error {
 			cmd.AddCommand(subCmd)
 		}
 	}
-	if executeErr := cmd.Execute(); executeErr != nil {
+	if executeErr := executeCommand(cmd); executeErr != nil {
 		return executeErr
 	}
 	return nil
