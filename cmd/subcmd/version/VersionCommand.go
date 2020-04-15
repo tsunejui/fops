@@ -8,22 +8,22 @@ import (
 var version string = "v0.0.1"
 var usage string = "version"
 var shortName string = "Show the version info"
-type checksum struct {
+type versionCmd struct {
 	subcmd.SubCommand
 }
 func GetSubCommand() (*cobra.Command, error){
-	return subcmd.GetCommand(&checksum{subcmd.SubCommand{
+	return subcmd.GetCommand(&versionCmd{subcmd.SubCommand{
 		Usage:     usage,
 		ShortName: shortName,
 	}})
 }
-func (c *checksum) SetRequired(cmd *cobra.Command) error {
+func (c *versionCmd) SetRequired(cmd *cobra.Command) error {
 	return nil
 }
-func (c *checksum) SetFlags(cmd *cobra.Command) error {
+func (c *versionCmd) SetFlags(cmd *cobra.Command) error {
 	return nil
 }
-func (c *checksum) RUN (cmd *cobra.Command, args []string) error {
+func (c *versionCmd) RUN (cmd *cobra.Command, args []string) error {
 	fmt.Println(fmt.Sprintf("fops %s", version))
 	return nil
 }

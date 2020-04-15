@@ -1,34 +1,45 @@
 package version
 
 import (
-	"flag"
-	"fops/commands"
+	"fops/cmd/subcmd"
+	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"reflect"
-	"rsc.io/getopt"
 	"testing"
 )
 
-func TestGetCommand(t *testing.T) {
-	assert.Equal(t, "*version.command", reflect.TypeOf(GetCommand()).String())
+func TestGetSubCommand(t *testing.T) {
+	cmd, cmdErr := GetSubCommand()
+	assert.NoError(t, cmdErr)
+	assert.Equal(t, "*cobra.Command", reflect.TypeOf(cmd).String())
 }
 
-func TestHandle(t *testing.T) {
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestVersionSetFlags(t *testing.T) {
+	cmd := &cobra.Command{}
+	assert.NoError(t, (&versionCmd{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-	}).Handle([]string{}))
+	}).SetFlags(cmd))
 }
 
-func TestInitial(t *testing.T) {
-	assert.NoError(t, (&command{
-		SubCommand: commands.SubCommand{
-			Flag:        getopt.NewFlagSet("test", flag.ExitOnError),
-			Description: "",
-			CommandName: "",
+func TestVersionCmdSetRequired(t *testing.T) {
+	cmd := &cobra.Command{}
+	assert.NoError(t, (&versionCmd{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
 		},
-	}).Initial())
+	}).SetRequired(cmd))
+}
+
+func TestVersionCmdRUN(t *testing.T) {
+	cmd := &cobra.Command{}
+	assert.NoError(t, (&versionCmd{
+		subcmd.SubCommand{
+			ShortName: "",
+			Usage:     "",
+		},
+	}).RUN(cmd, []string{}))
 }
