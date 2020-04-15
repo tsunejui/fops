@@ -17,6 +17,13 @@ type SubCommand struct {
 	Usage string
 }
 
+var getCobraCommand = func(cmd InterfaceCommand) *cobra.Command{
+	return &cobra.Command{
+		Use:   cmd.GetUsage(),
+		Short: cmd.GetShortName(),
+	}
+}
+
 func (c *SubCommand) GetShortName() string {
 	return c.ShortName
 }
@@ -25,10 +32,7 @@ func (c *SubCommand) GetUsage() string {
 }
 
 func GetCommand(subCmd InterfaceCommand) (*cobra.Command, error){
-	cmd := &cobra.Command{
-		Use:   subCmd.GetUsage(),
-		Short: subCmd.GetShortName(),
-	}
+	cmd := getCobraCommand(subCmd)
 	if flgErr := subCmd.SetFlags(cmd); flgErr != nil {
 		return nil, flgErr
 	}
