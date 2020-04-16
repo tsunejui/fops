@@ -1,20 +1,21 @@
 language: go
 os: linux
 go:
-  - 1.14.x
+- 1.14.x
 env:
   global:
-    - GO111MODULE=on
+  - GO111MODULE=on
 script:
-  - go test ./...
-  - go build -ldflags "-X fops/cmd/subcmd/version.version=$(git describe --tags `git rev-list --tags --max-count=1`)" -o fops
+- go test ./...
+- go build -ldflags "-X fops/cmd/subcmd/version.version=$(git describe --tags `git
+  rev-list --tags --max-count=1`)" -o fops
 deploy:
   provider: releases
-  api_key: $GITHUB_TOKEN
+  api_key:
+    secure: $GITHUB_TOKEN
   file: fops
-  skip_cleanup: true
   on:
-    tags: true
+    repo: tsunejui/fops
 notifications:
   email:
     on_success: never
