@@ -17,8 +17,9 @@ A command-line application `fops` written in Golang
 - count line with the specific file
 - generate checksum with the specific file
 
-_**Note:** use `spf13 / cobra` to implement command line utilities._
+_**Note1:** use `spf13 / cobra` to implement command line utilities._
 
+_**Note2:** use `gabriel-vasile/mimetype` to detect non-text files._
 <a name="installation"/>
 
 ## Installation
@@ -49,4 +50,4 @@ go build -o fops
 ```shell
 go test ./...
 ```
-![image](https://github.com/tsunejui/fops/blob/feature-5/src/testing.PNG?raw=true)
+![image](https://github.com/tsunejui/fops/blob/master/src/testing.PNG?raw=true)
