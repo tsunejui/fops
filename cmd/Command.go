@@ -6,7 +6,8 @@ import (
 	"fops/cmd/subcmd/checksum"
 	"fops/cmd/subcmd/linecount"
 	"fops/cmd/subcmd/version"
-	"fops/expection"
+	"fops/exception"
+
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ var executeCommand = func(cmd *cobra.Command) error {
 
 func init() {
 	if err := root.SetRootCommand(&cobra.Command{Use: commandName}); err != nil {
-		expection.ExitOsError(err)
+		exception.ExitOsError(err)
 	}
 }
 
@@ -35,7 +36,7 @@ func Execute() error {
 		if subCmd, subCmdErr := getCmd(); subCmdErr != nil {
 			fmt.Println(subCmdErr)
 			continue
-		}else{
+		} else {
 			cmd.AddCommand(subCmd)
 		}
 	}

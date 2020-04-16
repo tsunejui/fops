@@ -2,13 +2,13 @@ package main
 
 import (
 	"fops/cmd"
-	"fops/expection"
+	"fops/exception"
 	"fops/service"
 	"log"
 )
 
 func main() {
-	defer expection.UnexpectedHandle()
+	defer exception.UnexpectedHandle()
 	if initSystemErr := service.InitialSystemService(); initSystemErr != nil {
 		log.Println("Failed to initial system service", initSystemErr)
 	}
