@@ -8,7 +8,7 @@ import (
 	md5 "fops/cmd/subcmd/checksum/algorithm/md5"
 	sha "fops/cmd/subcmd/checksum/algorithm/sha"
 	sha256 "fops/cmd/subcmd/checksum/algorithm/sha256"
-	"fops/service"
+	"fops/pkg/service"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 )

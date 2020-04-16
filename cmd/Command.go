@@ -6,7 +6,7 @@ import (
 	"fops/cmd/subcmd/checksum"
 	"fops/cmd/subcmd/linecount"
 	"fops/cmd/subcmd/version"
-	"fops/exception"
+	"fops/pkg/exception"
 
 	"github.com/spf13/cobra"
 )

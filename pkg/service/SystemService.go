@@ -1,6 +1,6 @@
 package service
 
-import "fops/exception"
+import "fops/pkg/exception"
 
 type SystemService struct {
 	Preload []func()

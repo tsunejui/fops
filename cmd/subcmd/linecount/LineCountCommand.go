@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"fops/cmd/subcmd"
-	"fops/service"
+	"fops/pkg/service"
 	"github.com/gabriel-vasile/mimetype"
 	"github.com/spf13/cobra"
 	"io"
