@@ -2,8 +2,8 @@ package main
 
 import (
 	"fops/cmd"
-	"fops/exception"
-	"fops/service"
+	"fops/pkg/exception"
+	"fops/pkg/service"
 	"log"
 )
 

@@ -3,7 +3,7 @@
 # fops
 A command-line application `fops` written in Golang
 
-![image](https://github.com/tsunejui/fops/blob/master/src/overview.gif?raw=true)
+![image](./docs/overview.gif)
 
 ## Menu
 - [Features](#features)
@@ -50,4 +50,4 @@ go build -o fops
 ```shell
 go test ./...
 ```
-![image](https://github.com/tsunejui/fops/blob/master/src/testing.PNG?raw=true)
+![image](./docs/testing.PNG)
