@@ -1,6 +1,6 @@
 package service
 
-import "fops/expection"
+import "fops/exception"
 
 type SystemService struct {
 	Preload []func()
@@ -22,8 +22,8 @@ func (s *SystemService) AddPreload(load func()) error {
 	return nil
 }
 
-func (s *SystemService) Shutdown () {
-	defer expection.PanicHandle()
+func (s *SystemService) Shutdown() {
+	defer exception.PanicHandle()
 	for _, load := range s.Preload {
 		load()
 	}
