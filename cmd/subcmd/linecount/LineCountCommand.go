@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"fops/cmd/subcmd"
 	"fops/service"
+	"github.com/gabriel-vasile/mimetype"
 	"github.com/spf13/cobra"
 	"io"
 )
@@ -48,12 +49,35 @@ func (c *linecount) RUN (cmd *cobra.Command, args []string) error {
 			fmt.Println(fileErr)
 			return nil
 		}
+		binaryFile, binaryErr := isBinary(filepath)
+		if binaryErr != nil {
+			return binaryErr
+		}
+		if binaryFile {
+			fmt.Println(fmt.Sprintf("error: Cannot do linecount for binary file '%s' ", file.Name()))
+			return nil
+		}
 		fmt.Println(getFileLineCount(file))
 	}else{
 		return errors.New("Missing Argument")
 	}
 	return nil
 }
+
+var isBinary = func(filePath string) (bool, error) {
+	mime, err := mimetype.DetectFile(filePath)
+	if err != nil {
+		return false, err
+	}
+	binary := true
+	for mime := mime; mime != nil; mime = mime.Parent() {
+		if mime.Is("text/plain") {
+			binary = false
+		}
+	}
+	return binary, nil
+}
+
 var getFileLineCount = func (file io.Reader) int {
 	scanner := bufio.NewScanner(file)
 	var result []string
