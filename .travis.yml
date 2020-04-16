@@ -15,6 +15,7 @@ deploy:
     secure: $GITHUB_TOKEN
   file: fops
   on:
+    tags: true
     repo: tsunejui/fops
 notifications:
   email:
