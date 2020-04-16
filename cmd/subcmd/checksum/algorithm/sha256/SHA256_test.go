@@ -1,3 +1,5 @@
+// +build unit
+
 package sha256
 
 import (
