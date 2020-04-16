@@ -21,6 +21,7 @@ func TestLineCountRUN(t *testing.T) {
 	defer gostub.StubFunc(&getFileArgs, mockFilePath, nil).Reset()
 	defer gostub.StubFunc(&getFile, nil, nil, nil).Reset()
 	defer gostub.StubFunc(&getFileLineCount, 0).Reset()
+	defer gostub.StubFunc(&isBinary, false, nil).Reset()
 	assert.NoError(t, (&linecount{
 		subcmd.SubCommand{
 			ShortName: "",
