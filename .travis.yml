@@ -1,19 +1,19 @@
 language: go
 os: linux
 go:
-- 1.14.x
+  - 1.14.x
 env:
   global:
-  - GO111MODULE=on
+    - GO111MODULE=on
 script:
-- go test ./...
-- go build -ldflags "-X fops/cmd/subcmd/version.version=$(git describe --tags `git
-  rev-list --tags --max-count=1`)" -o fops
+  - go test ./...
+  - go build -ldflags "-X fops/cmd/subcmd/version.version=$(git describe --tags `git
+    rev-list --tags --max-count=1`)" -o fops
 deploy:
   skip_cleanup: true
   provider: releases
   api_key:
-    secure: "$GITHUB_TOKEN"
+    secure: yD135fC62pEFWKC5u70yCkBibUG6Hdn6hq+B9fKHJIQbjWkNzRHzplG8NjD5yTUH3l+jiJKsLU69SBjmQUvOc2eIsqo1+IZAIRR7y3Vstx5Lkl3u4wH9MK5hOQQHvaO/6a0FxlmcYwYNp4b/pxYQwyW8xoBQhUbDJQTDUyHylg0PBD0jXYVV2nb0ih5fKKOAU+j2acnso7s07jBtwpG/nFz1KrPJ7TM4EnAxD9evSnpL98ywqBz/+dtMzl/nliMZmrpaFitztAq4Do5Yr2PK/G/koFO8IyIktTxr4ZcahrEVecbS9NeUxyLT/CP81Bh9gr6tFcQzSz0ZLOnBVEmKTsoraxQzaBzydDspuysbXr0sEz9JnbvTJT/gpRJQqI/OpHC/xX2cc88ikj+eNTe430pJUXkLllngaRARqZj3tQHngeikvDcTMcU9f8g3IXamzFTdPNfAjrm2gYa7S0Opm6kty7vhp4gZz56ykLUxhS6yPpKlImvngPnQguDpE/UV2hNvPFALvPJK5Jskw3aTbUWDqn8fvpRHQiMMtLokGBXwFDU+jOvK/U+qMFahUXAg76Glfr9ROirrixAXnBv5ro9bWwzHZfWVZf/hFMBOtXv47qTSYOHvhcLW756qGuOAMFF2P6VSeC3LDe/kboIqvuPvdQBVDmrZ1/XW+yLPlcQ=
   file: fops
   on:
     tags: true
