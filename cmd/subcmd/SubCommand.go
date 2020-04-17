@@ -39,11 +39,7 @@ func GetCommand(subCmd InterfaceCommand) (*cobra.Command, error){
 	if reqErr := subCmd.SetRequired(cmd); reqErr != nil {
 		return nil, reqErr
 	}
-	cmd.Run = func(cmd *cobra.Command, args []string) {
-		if err := subCmd.RUN(cmd, args); err != nil {
-			//fmt.Println(cmd.Usage())
-		}
-	}
+	cmd.RunE = subCmd.RUN
 	return cmd, nil
 }
 

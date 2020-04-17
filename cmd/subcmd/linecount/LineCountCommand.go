@@ -46,16 +46,14 @@ func (c *linecount) RUN (cmd *cobra.Command, args []string) error {
 	if len(filepath) > 0 {
 		file, _, fileErr := getFile(filepath)
 		if fileErr != nil {
-			fmt.Println(fileErr)
-			return nil
+			return fileErr
 		}
 		binaryFile, binaryErr := isBinary(filepath)
 		if binaryErr != nil {
 			return binaryErr
 		}
 		if binaryFile {
-			fmt.Println(fmt.Sprintf("error: Cannot do linecount for binary file '%s' ", file.Name()))
-			return nil
+			return errors.New(fmt.Sprintf("error: Cannot do linecount for binary file '%s' ", file.Name()))
 		}
 		fmt.Println(getFileLineCount(file))
 	}else{

@@ -69,8 +69,7 @@ func (c *checksum) RUN (cmd *cobra.Command, args []string) error {
 	if len(filepath) > 0 {
 		data, getDataErr := getFileData(filepath)
 		if getDataErr != nil {
-			fmt.Println(getDataErr)
-			return nil
+			return getDataErr
 		}
 		var parse bool
 		loop:
