@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 )
@@ -39,10 +40,10 @@ func GetFile(path string) (*os.File, os.FileInfo, error) {
 	}
 	info, infoErr = getFileStat(file)
 	if infoErr != nil {
-		return file, info, errors.New("Failed to get file info: " + infoErr.Error())
+		return file, info, fmt.Errorf("Failed to get file info:  %s", infoErr.Error())
 	}
 	if infoIsDir(info) {
-		return file, info, errors.New("error: Expected file got directory '" + path + "'")
+		return file, info, fmt.Errorf("error: Expected file got directory %s", path)
 	}
 	return file, info, nil
 }

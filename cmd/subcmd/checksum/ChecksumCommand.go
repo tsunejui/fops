@@ -28,7 +28,7 @@ var getFileData = func (path string) ([]byte, error){
 	}
 	data, readErr := ioutil.ReadFile(path)
 	if readErr != nil {
-		return []byte{}, errors.New("Failed to read file: " + readErr.Error())
+		return []byte{}, fmt.Errorf("Failed to read file:  %s", readErr.Error())
 	}
 	return data, nil
 }

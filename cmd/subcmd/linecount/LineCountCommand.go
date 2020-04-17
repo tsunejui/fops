@@ -53,7 +53,7 @@ func (c *linecount) RUN (cmd *cobra.Command, args []string) error {
 			return binaryErr
 		}
 		if binaryFile {
-			return errors.New(fmt.Sprintf("error: Cannot do linecount for binary file '%s' ", file.Name()))
+			return fmt.Errorf("error: Cannot do linecount for binary file '%s' ", file.Name())
 		}
 		fmt.Println(getFileLineCount(file))
 	}else{
