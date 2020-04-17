@@ -21,7 +21,7 @@ func TestGetSubCommand(t *testing.T) {
 	assert.Equal(t, "*cobra.Command", reflect.TypeOf(cmd).String())
 }
 
-func TestChecksumRUWithFile(t *testing.T) {
+func TestChecksumRUNWithFile(t *testing.T) {
 	initSystemErr := service.InitialSystemService()
 	setRootErr := root.SetRootCommand(&cobra.Command{
 		Use: "fops",
@@ -35,6 +35,26 @@ func TestChecksumRUWithFile(t *testing.T) {
 	rootCmd.SetArgs(cmdArgs[1:])
 	executeErr := cmd.Execute()
 	assert.NoError(t, executeErr)
+	assert.NoError(t, initSystemErr)
+	assert.NoError(t, setRootErr)
+	assert.NoError(t, getRootErr)
+}
+
+func TestChecksumRUNWithInvalidFile(t *testing.T) {
+	initSystemErr := service.InitialSystemService()
+	setRootErr := root.SetRootCommand(&cobra.Command{
+		Use: "fops",
+		SilenceUsage: true,
+		SilenceErrors: true,
+	})
+	rootCmd, getRootErr := root.GetRootCommand()
+	filePath := "../../../test/test.txt"
+	command := fmt.Sprintf("fops checksum -f %s --md5", filePath)
+	cmdArgs := strings.Split(command, " ")
+	rootCmd.SetArgs(cmdArgs[1:])
+	executeErr := cmd.Execute()
+	assert.Error(t, executeErr)
+	assert.Equal(t, "error execute",executeErr.Error())
 	assert.NoError(t, initSystemErr)
 	assert.NoError(t, setRootErr)
 	assert.NoError(t, getRootErr)
