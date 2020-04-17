@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"fops/cmd/root"
 	"fops/cmd/subcmd/checksum"
@@ -18,7 +19,11 @@ var executeCommand = func(cmd *cobra.Command) error {
 }
 
 func init() {
-	if err := root.SetRootCommand(&cobra.Command{Use: commandName}); err != nil {
+	if err := root.SetRootCommand(&cobra.Command{
+		Use: commandName,
+		SilenceUsage: true,
+		SilenceErrors: true,
+	}); err != nil {
 		exception.ExitOsError(err)
 	}
 }
@@ -41,7 +46,8 @@ func Execute() error {
 		}
 	}
 	if executeErr := executeCommand(cmd); executeErr != nil {
-		return executeErr
+		fmt.Println(executeErr)
+		return errors.New("error execute")
 	}
 	return nil
 }

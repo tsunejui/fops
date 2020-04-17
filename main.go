@@ -5,6 +5,7 @@ import (
 	"fops/pkg/exception"
 	"fops/pkg/service"
 	"log"
+	"os"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 		log.Println("Failed to initial system service", initSystemErr)
 	}
 	if executeErr := cmd.Execute(); executeErr != nil {
-		//log.Println("Failed to execute root command:", executeErr)
+		os.Exit(1)
 	}
 	defer service.GetSystemService().Shutdown()
 }
