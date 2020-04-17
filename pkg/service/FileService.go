@@ -27,7 +27,7 @@ func GetFile(path string) (*os.File, os.FileInfo, error) {
 	file, openErr := openFile(path)
 	if openErr != nil {
 		if fileIsNotExist(openErr) {
-			return file, info, errors.New("error: No such file '" + path +  "'")
+			return file, info, errors.New(fmt.Sprintf("error: No such file %s", path))
 		}
 		return file, info, openErr
 	}

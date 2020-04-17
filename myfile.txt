@@ -1,5 +1,0 @@
-how to
-you
-turn this
-on
-EOF

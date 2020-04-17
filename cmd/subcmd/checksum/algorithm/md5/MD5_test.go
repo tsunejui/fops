@@ -1,3 +1,5 @@
+// +build unit
+
 package md5
 
 import (
